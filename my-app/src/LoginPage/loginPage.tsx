@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
 import MainPage from '../MainPage/main';
 import SignUp from './signUp';
 import ForgotPassword from './forgotPassword';
-import '../cssFile/App.css';
+import '../cssFile/loginPage.css';
 
 function LoginPage(){
 
@@ -34,8 +34,8 @@ function App(){
             <Routes>
                 <Route path='/*' element={<LoginPage/>}></Route>
                 <Route path='/mainPage' element={<MainPage/>}></Route>
-                <Route path='/signUp' element={<SignUp/>}></Route>
                 <Route path='/forgotPassword' element={<ForgotPassword/>}></Route>
+                <Route path='/signUp' element={<SignUp/>}></Route>
             </Routes>
         </Router>
     )

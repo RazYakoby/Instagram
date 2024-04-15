@@ -1,0 +1,61 @@
+.menu {
+    position: fixed;
+    top: 0;
+    left: 0;
+    border: 2px solid white;
+    background-color: black;
+}
+
+.menu h3:hover {
+    background-color: black;
+    cursor: pointer;
+}
+
+.menu button:hover {
+    background-color: greenyellow;
+    color: black;
+    cursor: pointer;
+}
+
+.button_style_click {
+    position: relative;
+    top: 50%;
+    right: 17%;
+    transform: translate(50%, 20%);
+    border: 2px solid white;
+    background-color: black;
+    border-radius: 10px;
+    color: white;
+    transition: top 0.5s ease, left 0.5s ease;
+}
+
+.button_style_unClick {
+    position: absolute;
+    top: 0;
+    left: 0;
+    transition: top 0.5s ease, left 0.5s ease;
+}
+
+h3 {
+    color: white;
+}
+
+.open_menu {
+    width: 75px;
+    height: 200px;
+    background-color: lightblue;
+    overflow: visible;
+    transition: width 0.5s ease, height 0.5s ease;
+    text-transform: capitalize;
+    text-align: center;
+    font-size: medium;
+}
+
+.close_menu {  
+    width: 0px;
+    height: 0px;
+    text-transform: capitalize;
+    background-color: black;
+    overflow: hidden;
+    transition: width 0.5s ease, height 0.5s ease;
+}

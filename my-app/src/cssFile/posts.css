@@ -1,0 +1,26 @@
+.post {
+    display: grid;
+    justify-content: center;
+    align-items: center;
+}
+
+.img {
+    width: 40vw;
+    height: 40vw;
+}
+
+.features {
+    margin: 2px;
+    display: flex;
+    justify-self: right;
+    margin-right: 91px;
+    width: 30px;
+    height: 35px;
+    cursor: pointer;
+}
+
+.likes {
+    width: 30px;
+    height: 30px;
+}
+
