@@ -4,6 +4,10 @@ import MainPage from '../MainPage/main';
 import SignUp from './signUp';
 import ForgotPassword from './forgotPassword';
 import '../cssFile/loginPage.css';
+import Setting from '../MainPage/setting';
+import UploadPoat from '../MainPage/uploadPost';
+import Posts from '../MainPage/posts';
+import Main from '../MainPage/main';
 
 function LoginPage(){
 
@@ -36,6 +40,10 @@ function App(){
                 <Route path='/mainPage' element={<MainPage/>}></Route>
                 <Route path='/forgotPassword' element={<ForgotPassword/>}></Route>
                 <Route path='/signUp' element={<SignUp/>}></Route>
+                <Route path='main' element={<Main/>}></Route>
+                <Route path='/posts' element = {<Posts/>}></Route>
+                <Route path='/setting' element={<Setting/>}></Route>
+                <Route path='/uploadPost' element={<UploadPoat/>}></Route>
             </Routes>
         </Router>
     )

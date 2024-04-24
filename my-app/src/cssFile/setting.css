@@ -6,9 +6,20 @@
     background-color: black;
 }
 
-.menu h3:hover {
+#button {
+    border: 2px solid transparent;
+    background-color: transparent;
+    width: 75px;
+    height: 50px;
+    font-size: 15px;
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    margin: -10px;
+}
+
+#button:hover {
+    color: white;
     background-color: black;
-    cursor: pointer;
+    height: 60px;
 }
 
 .menu button:hover {
@@ -34,10 +45,6 @@
     top: 0;
     left: 0;
     transition: top 0.5s ease, left 0.5s ease;
-}
-
-h3 {
-    color: white;
 }
 
 .open_menu {
