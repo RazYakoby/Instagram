@@ -2,6 +2,7 @@ import { useState, useEffect, ChangeEvent, FormEvent } from 'react';
 import { useNavigate } from "react-router-dom";
 import '../cssFile/uploadPost.css';
 import { read } from 'fs';
+import Setting from './setting';
 
 function UploadPost(){
     const [imageSrc, setImageSrc] = useState('');
@@ -139,6 +140,9 @@ function UploadPost(){
 
     return (
         <div>
+            <div>
+                <Setting/>
+            </div>
             <input className='input_file' type="file" onChange={handleImageUpload}/>
             <nav>
                 <img src={imageSrc} className="img_post" alt='img'></img>
@@ -152,7 +156,7 @@ function UploadPost(){
                     <img id='img_filter' src={filter5} onClick={ChangeToFilter5}></img>
                 </div>
             </nav>
-            <button className='upload_post' onClick={UploadPost}>Upload<img src={imageSrc}></img></button>
+            <button className='upload_post' onClick={UploadPost}>Upload</button>
         </div>
     )
 }

@@ -9,21 +9,14 @@ function Setting(){
 
     const navigate = useNavigate();
 
-    class Setting {
-       open(): boolean {
-       return true;
-     }
-    }
-
-      const instance = new Setting();
-      const postPage = Posts();
+    const currentPath = window.location.pathname;
       
-      const Home = () => {
-      if (typeof instance.open === typeof Setting && instance.open()) {
+    const Home = () => {
+      if (currentPath === "main") {
         window.scrollTo({ top: 0, behavior: 'smooth' });
       }
       else {
-        navigate('/setting');
+        navigate('/main');
       }
     }
 
@@ -40,7 +33,9 @@ function Setting(){
         setIsClick(count % 2 === 0);
     };
 
-
+    const logOut = () => {
+        navigate("/loginPage");
+    }
 
 
     return(
@@ -51,7 +46,7 @@ function Setting(){
                     <h3><button id="button" onClick={Home}>Home</button></h3>
                     <h3><button id="button" onClick={UploadPost}>upload Post</button></h3>
                     <h3><button id="button">explorer</button></h3>
-                    <h3><button id="button">setting</button></h3>
+                    <h3><button id="button" onClick={logOut}>logOut</button></h3>
                 </div>
             </div>
         </div>

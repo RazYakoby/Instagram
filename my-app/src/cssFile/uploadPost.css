@@ -48,3 +48,13 @@
     color: white;
     background-color: black;
 }
+
+.returnToMainPage {
+    position: fixed;
+    cursor: pointer;
+}
+
+.returnToMainPage:hover {
+    color: white;
+    background-color: black;
+}
