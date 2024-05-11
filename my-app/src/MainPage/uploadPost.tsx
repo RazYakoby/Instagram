@@ -1,138 +1,89 @@
-import { useState, useEffect, ChangeEvent, FormEvent } from 'react';
+import React, { useState, useEffect, ChangeEvent, FormEvent, useReducer, SetStateAction } from 'react';
 import { useNavigate } from "react-router-dom";
 import '../cssFile/uploadPost.css';
 import { read } from 'fs';
 import Setting from './setting';
 
+function Filter(data:ImageData, num:number, div:number) {
+    const newImage = new Uint8ClampedArray(data.data);
+    for (let val = 0; val < newImage.length; val += num) {
+        const avg = (newImage[val] + newImage[val + 1] + newImage[val + 2]) / div;
+        newImage[val] = avg;
+        newImage[val + 1] = avg;
+        newImage[val + 2] = avg;
+    }   
+    return new ImageData(newImage, data.width, data.height);;
+}
+
+function MathFilter(data:ImageData, num:number, number:number, times:number) {
+    const newImage = new Uint8ClampedArray(data.data);
+    for (let val = 0; val < newImage.length; val += num){
+        newImage[val] = Math.min(newImage[val] + number * times, 255);
+        newImage[val + 1] = Math.min(newImage[val + 1] + number * times, 255); 
+        newImage[val + 2] = Math.min(newImage[val + 2] + number * times, 255); 
+    }
+
+    return new ImageData(newImage, data.width, data.height);;
+}
+
+function imageDataToDataURL(imageData:any) {
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+    canvas.width = imageData.width;
+    canvas.height = imageData.height;
+    ctx?.putImageData(imageData, 0, 0);
+    return canvas.toDataURL(); 
+    
+  }
+
+
+const filters = [[1,1],[4,1],[6,2],[10,4],[8,4]];
+const mathFilters = [[4,173,0.5],[4,1,1.1]];
+
+function ChangeFilter(data:ImageData, index:number, isMathFilter:boolean) :string {
+    let filtered:ImageData;
+    if (isMathFilter){
+        filtered = MathFilter(data, mathFilters[index][0], mathFilters[index][1], mathFilters[index][2]);
+    }
+    else {
+        filtered = Filter(data, filters[index][0], filters[index][1]);
+    }
+    return imageDataToDataURL(filtered);
+}
+
 function UploadPost(){
     const [imageSrc, setImageSrc] = useState('');
-    const [blackAndWhiteFilterSrc, SetblackAndWhiteFilterSrc] = useState('');
-    const [filter1, setFilter1] = useState('');
-    const [filter2, setFilter2] = useState('');
-    const [filter3, setFilter3] = useState('');
-    const [filter4, setFilter4] = useState('');
-    const [filter5, setFilter5] = useState('');
-    const [getImage, setImage] = useState('');
-    const [getnormalFilter, setNormalFilter] = useState('');
-    const [isImageChanged, setIsImageChanged] = useState(false);
-    const [imageUrl, setImageUrl] = useState<string>('');
-    const img = new Image;
+
+    const [imageData, setImageData] = useState<ImageData | null>(null);
+
     const navigate = useNavigate();
 
     const handleImageUpload = (e:any) => {
         const file = e.target.files[0];
         const reader = new FileReader();
-
-      reader.onload = () => {
-        setImageSrc(reader.result as string);
-        setImage(img.src);
-        setNormalFilter(reader.result as string);
-        setIsImageChanged(true);
-      }
+    
+        reader.onload = () => {
+            let img = new Image;
+            img.onload = () => {
+                setImageSrc(img.src);
+                const canvas = document.createElement('canvas');
+                const context = canvas.getContext('2d');
+                if (context) {
+                    canvas.width = img.width;
+                    canvas.height = img.height;
+                    context.drawImage(img, 0, 0);
+                    const data = context.getImageData(0, 0, canvas.width, canvas.height);
+                    setImageData(data);
+                }
+            };
+            img.src = reader.result as string;
+        };
       
       reader.readAsDataURL(file);
       
     }
 
-    useEffect(() => {
-        if (!isImageChanged) return;
-        img.onload = () => {
-            const canvas = document.createElement('canvas');
-            const context = canvas.getContext('2d');
-            if (context) {
-                canvas.width = img.width;
-                canvas.height = img.height;
-                context.drawImage(img, 0, 0);
-                const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
-                //const data = imageData.data;
-                const data:any[] = [imageData, imageData, imageData, imageData, imageData, imageData];
-                for (let val = 0; val < data[0].data.length; val += 4) {
-                    const avg = (data[0].data[val] + data[0].data[val + 1] + data[0].data[val + 2]) / 3;
-                    data[0].data[val] = avg;
-                    data[0].data[val + 1] = avg;
-                    data[0].data[val + 2] = avg;
-                }
-
-                context.putImageData(data[0], 0, 0);
-                SetblackAndWhiteFilterSrc(canvas.toDataURL());
-                
-                for (let val = 0; val < data[1].data.length; val += 6){
-                    const avg = (data[1].data[val] + data[1].data[val + 1] + data[1].data[val + 2]) / 2;
-                    data[1].data[val] = avg;
-                    data[1].data[val + 1] = avg;
-                    data[1].data[val + 2] = avg;
-                }
     
-                context.putImageData(data[1], 0, 0);
-                setFilter1(canvas.toDataURL());
-
-                for (let val = 0; val < data[2].data.length; val += 10){
-                    const avg = (data[2].data[val] + data[2].data[val + 1] + data[2].data[val + 2]) / 4;
-                    data[2].data[val] = avg;
-                    data[2].data[val + 1] = avg;
-                    data[2].data[val + 2] = avg;
-                }
-
-                context.putImageData(data[2], 0, 0);
-                setFilter2(canvas.toDataURL());
-
-                for (let val = 0; val < data[3].data.length; val += 8){
-                    const avg = (data[3].data[val] + data[3].data[val + 1] + data[3].data[val + 2]) / 4;
-                    data[3].data[val] = avg;
-                    data[3].data[val + 1] = avg;
-                    data[3].data[val + 2] = avg;
-                }
-
-                context.putImageData(data[3], 0, 0);
-                setFilter3(canvas.toDataURL());
-
-                for (let val = 0; val < data[4].data.length; val += 4){
-                    data[4].data[val] = Math.min(data[4].data[val] + 173 * 0.5, 255);     // Red channel
-                    data[4].data[val + 1] = Math.min(data[4].data[val + 1] + 216 * 0.5, 255); // Green channel
-                    data[4].data[val + 2] = Math.min(data[4].data[val + 2] + 230 * 0.5, 255); // Blue channel
-                }
-
-                context.putImageData(data[4], 0, 0);
-                setFilter4(canvas.toDataURL());
-
-                for (let val = 0; val < data[5].data.length; val += 4){
-                    data[5].data[val] = Math.min(data[5].data[val] * 1.1, 255); // Red
-                    data[5].data[val + 1] = Math.min(data[5].data[val + 1] * 1.1, 255); // Green
-                    data[5].data[val + 2] = Math.min(data[5].data[val + 2] * 1.2, 255); // Blue
-                }
-
-                context.putImageData(data[5], 0, 0);
-                setFilter5(canvas.toDataURL());
-            }
-        };
-        setIsImageChanged(false);
-        img.src = imageSrc;
-    }, [imageSrc]);
-
-    const ChangeTonormalFilter = () => {
-        setImageSrc(getnormalFilter);
-    }
-
-    const ChangeToBlackWhtieFilter = () => {
-        setImageSrc(blackAndWhiteFilterSrc);
-    }
-
-    const ChangeToFilter1 = () => {
-        setImageSrc(filter1);
-    }
-
-    const ChangeToFilter2 = () => {
-        setImageSrc(filter2);
-    }
-    const ChangeToFilter3 = () => {
-        setImageSrc(filter3);
-    }
-    const ChangeToFilter4 = () => {
-        setImageSrc(filter4);
-    }
-    const ChangeToFilter5 = () => {
-        setImageSrc(filter5);
-    }
 
     const UploadPost = () => {
         navigate('/main');
@@ -147,13 +98,19 @@ function UploadPost(){
             <nav>
                 <img src={imageSrc} className="img_post" alt='img'></img>
                 <div className="filter">
-                    <img id='img_filter' src={getnormalFilter} onClick={ChangeTonormalFilter}></img>
-                    <img id='img_filter' src={blackAndWhiteFilterSrc} onClick={ChangeToBlackWhtieFilter}></img>
-                    <img id='img_filter' src={filter3} onClick={ChangeToFilter3}></img>
-                    <img id='img_filter' src={filter1} onClick={ChangeToFilter1}></img>
-                    <img id='img_filter' src={filter2} onClick={ChangeToFilter2}></img>
-                    <img id='img_filter' src={filter4} onClick={ChangeToFilter4}></img>
-                    <img id='img_filter' src={filter5} onClick={ChangeToFilter5}></img>
+                {imageData?(
+                    <>
+                        <img id='img_filter' src={ChangeFilter(imageData, 0, false)} onClick={() => setImageSrc(ChangeFilter(imageData, 0, false))}></img>
+                        <img id='img_filter' src={ChangeFilter(imageData, 1, false)} onClick={() => setImageSrc(ChangeFilter(imageData, 1, false))}></img>
+                        <img id='img_filter' src={ChangeFilter(imageData, 2, false)} onClick={() => setImageSrc(ChangeFilter(imageData, 2, false))} alt='filter1'></img>
+                        <img id='img_filter' src={ChangeFilter(imageData, 3, false)} onClick={() => setImageSrc(ChangeFilter(imageData, 3, false))} alt='filter2'></img>
+                        <img id='img_filter' src={ChangeFilter(imageData, 4, false)} onClick={() => setImageSrc(ChangeFilter(imageData, 4, false))} alt='filter3'></img>
+                        <img id='img_filter' src={ChangeFilter(imageData, 0, true)} onClick={() => setImageSrc(ChangeFilter(imageData, 0, true))} alt='filter4'></img>
+                        <img id='img_filter' src={ChangeFilter(imageData, 1, true)} onClick={() => setImageSrc(ChangeFilter(imageData, 1, true))} alt='filter5'></img>
+                    </>
+                )
+                :null
+                }
                 </div>
             </nav>
             <button className='upload_post' onClick={UploadPost}>Upload</button>
