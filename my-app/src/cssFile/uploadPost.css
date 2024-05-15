@@ -21,6 +21,8 @@
     border-radius: 5px;
     background-color: whitesmoke;
     margin-top: -100px;
+    overflow-x: auto;
+    white-space: nowrap;
 }
 
 #img_filter {

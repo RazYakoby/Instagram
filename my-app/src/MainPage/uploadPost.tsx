@@ -1,7 +1,6 @@
-import React, { useState, useEffect, ChangeEvent, FormEvent, useReducer, SetStateAction } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import '../cssFile/uploadPost.css';
-import { read } from 'fs';
 import Setting from './setting';
 
 function Filter(data:ImageData, num:number, div:number) {
@@ -37,7 +36,7 @@ function imageDataToDataURL(imageData:any) {
   }
 
 
-const filters = [[1,1],[4,1],[6,2],[10,4],[8,4]];
+const filters = [[2,3],[6,8],[6,2],[10,4],[8,4]];
 const mathFilters = [[4,173,0.5],[4,1,1.1]];
 
 function ChangeFilter(data:ImageData, index:number, isMathFilter:boolean) :string {
@@ -100,13 +99,13 @@ function UploadPost(){
                 <div className="filter">
                 {imageData?(
                     <>
-                        <img id='img_filter' src={ChangeFilter(imageData, 0, false)} onClick={() => setImageSrc(ChangeFilter(imageData, 0, false))}></img>
-                        <img id='img_filter' src={ChangeFilter(imageData, 1, false)} onClick={() => setImageSrc(ChangeFilter(imageData, 1, false))}></img>
+                        <img id='img_filter' src={ChangeFilter(imageData, 1, true)} onClick={() => setImageSrc(ChangeFilter(imageData, 1, true))} alt='filter5'></img>
                         <img id='img_filter' src={ChangeFilter(imageData, 2, false)} onClick={() => setImageSrc(ChangeFilter(imageData, 2, false))} alt='filter1'></img>
                         <img id='img_filter' src={ChangeFilter(imageData, 3, false)} onClick={() => setImageSrc(ChangeFilter(imageData, 3, false))} alt='filter2'></img>
                         <img id='img_filter' src={ChangeFilter(imageData, 4, false)} onClick={() => setImageSrc(ChangeFilter(imageData, 4, false))} alt='filter3'></img>
                         <img id='img_filter' src={ChangeFilter(imageData, 0, true)} onClick={() => setImageSrc(ChangeFilter(imageData, 0, true))} alt='filter4'></img>
-                        <img id='img_filter' src={ChangeFilter(imageData, 1, true)} onClick={() => setImageSrc(ChangeFilter(imageData, 1, true))} alt='filter5'></img>
+                        <img id='img_filter' src={ChangeFilter(imageData, 0, false)} onClick={() => setImageSrc(ChangeFilter(imageData, 0, false))}></img>
+                        <img id='img_filter' src={ChangeFilter(imageData, 1, false)} onClick={() => setImageSrc(ChangeFilter(imageData, 1, false))}></img>
                     </>
                 )
                 :null
