@@ -2,6 +2,9 @@
     display: grid;
     justify-content: center;
     align-items: center;
+    border: 2px black solid;
+    border-width: 10px;
+    box-sizing: border-box;
 }
 
 .img {
@@ -13,7 +16,7 @@
     margin: 2px;
     display: flex;
     justify-self: right;
-    margin-right: 91px;
+    margin-right: 88px;
     width: 30px;
     height: 35px;
     cursor: pointer;
@@ -22,5 +25,30 @@
 .likes {
     width: 30px;
     height: 30px;
+    cursor: pointer;
+}
+
+#Comment {
+    cursor: pointer;
+}
+
+.counter {
+    color: white;
+    margin: 2px;
+    text-align: right;
+}
+
+.story {
+    margin: 30px 10px 10px 0px;
+    display: flex;
+}
+
+.storyButton {
+     margin-right: 10px;
+     width: 8vh;
+     height: 8vh;
+     border-radius: 50%;
+     border: 2px black solid;
+     cursor: pointer;
 }
 

@@ -1,18 +1,17 @@
 import { useState } from "react";
 import "../cssFile/setting.css";
-import MainPage from "./main";
-import Posts from "./posts";
-import loginPage from "../LoginPage/loginPage";
 import { Link, useNavigate } from "react-router-dom";
 
 function Setting(){
+
+    const [isClick, setIsClick] = useState(true);
 
     const navigate = useNavigate();
 
     const currentPath = window.location.pathname;
       
     const Home = () => {
-      if (currentPath === "main") {
+      if (currentPath === "/main") {
         window.scrollTo({ top: 0, behavior: 'smooth' });
       }
       else {
@@ -23,14 +22,9 @@ function Setting(){
     const UploadPost = () => {
         navigate('/uploadPost');
     }
-      
-
-    const [isClick, setIsClick] = useState(false);
-    const [count, setCount] = useState(0);
   
     const handleOpen = () => { 
-        setCount(count + 1);      
-        setIsClick(count % 2 === 0);
+       setIsClick(!isClick);
     };
 
     const logOut = () => {

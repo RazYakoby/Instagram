@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
 import '../cssFile/uploadPost.css';
 import Setting from './setting';
@@ -81,8 +81,6 @@ function UploadPost(){
       reader.readAsDataURL(file);
       
     }
-
-    
 
     const UploadPost = () => {
         navigate('/main');
