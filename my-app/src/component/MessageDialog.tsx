@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField, Typography } from '@mui/material';
+import '../cssFile/comment.css';
 
 interface MessageDialogProps {
     open: boolean;
@@ -11,6 +12,7 @@ interface MessageDialogProps {
 function MessageDialog({ open, onClose, onConfirm, comments }: MessageDialogProps) {
     const [text, setText] = useState('');
     const [message, setMessage] = useState('');
+    const [isEnglish, setIsEnglish] = useState(true);
 
     const handleClose = () => {
         onClose();
@@ -24,6 +26,21 @@ function MessageDialog({ open, onClose, onConfirm, comments }: MessageDialogProp
         setMessage('');
     };
 
+    useEffect(() => {
+        const handleKeyDown = (event:any) => {
+          const charCode = event.which || event.keyCode;
+          const charStr = String.fromCharCode(charCode);
+          const isEnglishChar = /^[A-Za-z\s]+$/.test(charStr);
+          setIsEnglish(isEnglishChar);
+        };
+    
+        window.addEventListener('keydown', handleKeyDown);
+    
+        return () => {
+          window.removeEventListener('keydown', handleKeyDown);
+        };
+      }, []);
+
     return (
         <Dialog open={open} onClose={handleClose}>
             <DialogTitle>Comments</DialogTitle>
@@ -31,12 +48,11 @@ function MessageDialog({ open, onClose, onConfirm, comments }: MessageDialogProp
                 {comments.map((comment, index) => (
                     <Typography key={index} variant="body1">{comment}</Typography>
                 ))}
-                <TextField
+                <TextField className='comment'
                     autoFocus
-                    margin="dense"
+                    margin="normal"
                     label="comment"
                     type="text"
-                    fullWidth
                     value={text}
                     onChange={(e) => setText(e.target.value)}
                 />

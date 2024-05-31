@@ -1,24 +1,18 @@
+import React, { useState, useEffect } from 'react';
 import heartIcon from '../heart-icon.jpg';
-import heartRedIcom from '../heartRed-icon.jpg';
+import heartRedIcon from '../heartRed-icon.jpg';
 import '../cssFile/posts.css';
-import { useEffect, useState } from 'react';
 import MessageDialog from '../component/MessageDialog';
-import { cursorTo } from 'readline';
 
-function Posts(){
+interface PostProps {
+    mainImage: string;
+    buttonImage: string;
+    likeId: string;
+    onClick: (event: React.MouseEvent<HTMLButtonElement>, likeId: string) => void;
+    count: number;
+}
 
-    const images = [heartIcon, heartRedIcom];
-    const [currentImageIndex, setCurrentImagesIndex] = useState(0);
-
-    const handleClick = () => {
-        setCurrentImagesIndex((currentImageIndex + 1) % images.length);
-    }
-
-    const [count, setCount] = useState(() => {
-        const saveCount = localStorage.getItem('likeCount');
-        return saveCount ? parseInt(saveCount, 10) : 0;
-    });
-
+const Post: React.FC<PostProps> = ({ mainImage, buttonImage, likeId, onClick, count }) => {
     const [open, setOpen] = useState(false);
     const [comments, setComments] = useState<string[]>([]);
 
@@ -35,71 +29,77 @@ function Posts(){
         setOpen(false);
     };
 
+    return (
+        <nav className="post">
+            <img src={mainImage} className="img" alt='heartIcon'></img>
+            <div className='features'>
+                <button id='Comment' onClick={handleOpen}>Comment</button>
+                <MessageDialog open={open} onClose={handleClose} onConfirm={handleConfirm} comments={comments} />
+                <button name='like' onClick={(e) => onClick(e, likeId)}>
+                    <img src={buttonImage} alt='button image' className='likes' />
+                </button>
+            </div>
+            <div>
+                <h4 className='counter'>{count}</h4>
+            </div>
+        </nav>
+    );
+};
+
+const Posts: React.FC = () => {
+    const images = [heartIcon, heartRedIcon];
+    const [likes, setLikes] = useState<{ [key: string]: number }>({});
+    const [buttonImages, setButtonImages] = useState<{ [key: string]: number }>({});
+
     useEffect(() => {
-        const like1 = document.getElementById('like1');
-        const like2 = document.getElementById('like2');
+        const savedLikes = JSON.parse(localStorage.getItem('likes') || '{}');
+        setLikes(savedLikes);
+        const savedButtonImages = JSON.parse(localStorage.getItem('buttonImages') || '{}');
+        setButtonImages(savedButtonImages);
+    }, []);
 
-        const handleClick1 = () => {
-            if (images[currentImageIndex] === heartRedIcom) {
-                setCount((prev) => {
-                    const newCount = prev - 1;
-                    localStorage.setItem('likeCount', newCount.toString());
-                    return newCount;
-                })
-            } else {
-                setCount((prev) => {
-                    const newCount = prev + 1;
-                    localStorage.setItem("likeCount", newCount.toString());
-                    return newCount;
-                })
-            }
-        };
+    const Like = (event: React.MouseEvent<HTMLButtonElement>, likeId: string) => {
 
-        like1?.addEventListener('click', handleClick1);
-        like2?.addEventListener('click', handleClick1);
+        const newButtonImages = { ...buttonImages };
+        newButtonImages[likeId] = (newButtonImages[likeId] || 0) + 1;
+        setButtonImages(newButtonImages);
+        localStorage.setItem('buttonImages', JSON.stringify(newButtonImages));
 
-        return () => {
-            like1?.removeEventListener('click', handleClick1);
-            like2?.removeEventListener('click', handleClick1);
+        const newLikes = { ...likes };
+        if (images[buttonImages[likeId] % images.length] === heartRedIcon){
+            newLikes[likeId] = (newLikes[likeId] || 0) - 1;
         }
-    }, [currentImageIndex, images]);
+        else {
+            newLikes[likeId] = (newLikes[likeId] || 0) + 1;  
+        }
+        setLikes(newLikes);
+        localStorage.setItem('likes', JSON.stringify(newLikes));
+    };
 
-    return(
+    return (
         <>
             <nav className='story'>
                 <button className='storyButton'></button>
                 <button className='storyButton'></button>
                 <button className='storyButton'></button>
             </nav>
-            <nav className="post">
-                <img src={heartIcon} className="img" alt='heartIcon'></img>
-                <div className='features'>
-                <button id='Comment' onClick={handleOpen}>Comment</button>
-                <MessageDialog open={open} onClose={handleClose} onConfirm={handleConfirm} comments={comments} />
-                <button id='like1' name='like' onClick={handleClick}>
-                    <img src={images[currentImageIndex]} alt='image' className='likes'/>
-                </button>
-                </div>
-                <div>
-                    <h4 className='counter'>{count}</h4>
-                </div>
-            </nav>
-
-            <nav className="post">
-                <img src={heartRedIcom} className="img" alt='heartRedIcon'></img>
-                <div className='features'>
-                <button id='Comment' onClick={handleOpen}>Comment</button>
-                    <MessageDialog open={open} onClose={handleClose} onConfirm={handleConfirm} comments={comments} />
-                    <button id='like2' onClick={handleClick}>
-                        <img src={images[currentImageIndex]} alt='image' className='likes'/>
-                    </button>
-                </div>
-                <div>
-                    <h4 className='counter'>{count}</h4>
-                </div>
-            </nav>
+            {[1, 2].map(index => {
+                const likeId = `like${index}`;
+                const buttonImageIndex = buttonImages[likeId] || 0;
+                return (
+                    <Post
+                        key={likeId}
+                        mainImage={images[index - 1]}  // Main image differs for each post
+                        buttonImage={images[buttonImageIndex % images.length]}  // Button image toggles
+                        likeId={likeId}
+                        onClick={Like}
+                        count={likes[likeId] || 0}
+                    />
+                );
+            })}
         </>
-    )
-}
+    );
+};
 
 export default Posts;
+
