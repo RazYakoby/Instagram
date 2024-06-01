@@ -5,9 +5,7 @@ const MainPage = () => {
 
     return(
       <div>
-        <div></div>
         <div><Posts/></div>
-        <div></div>
         <div><Setting/></div>
       </div>
     );

@@ -8,6 +8,7 @@ import Setting from '../MainPage/setting';
 import UploadPoat from '../MainPage/uploadPost';
 import Posts from '../MainPage/posts';
 import Main from '../MainPage/main';
+import Explorer from '../MainPage/explorer';
 
 function LoginPage(){
 
@@ -44,6 +45,7 @@ function App(){
                 <Route path='/posts' element = {<Posts/>}></Route>
                 <Route path='/setting' element={<Setting/>}></Route>
                 <Route path='/uploadPost' element={<UploadPoat/>}></Route>
+                <Route path='/explorer' element={<Explorer/>}></Route>
             </Routes>
         </Router>
     )

@@ -28,7 +28,11 @@ function Setting(){
     };
 
     const logOut = () => {
-        navigate("/loginPage");
+        navigate('/loginPage');
+    }
+
+    const explorer = () => {
+        navigate('/explorer');
     }
 
 
@@ -39,7 +43,7 @@ function Setting(){
                 <div>
                     <h3><button id="button" onClick={Home}>Home</button></h3>
                     <h3><button id="button" onClick={UploadPost}>upload Post</button></h3>
-                    <h3><button id="button">explorer</button></h3>
+                    <h3><button id="button" onClick={explorer}>explorer</button></h3>
                     <h3><button id="button" onClick={logOut}>logOut</button></h3>
                 </div>
             </div>

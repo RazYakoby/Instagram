@@ -83,14 +83,14 @@ const Posts: React.FC = () => {
                 <button className='storyButton'></button>
                 <button className='storyButton'></button>
             </nav>
-            {[1, 2].map(index => {
+            {images.map((img, index) => {
                 const likeId = `like${index}`;
                 const buttonImageIndex = buttonImages[likeId] || 0;
                 return (
                     <Post
                         key={likeId}
-                        mainImage={images[index - 1]}  // Main image differs for each post
-                        buttonImage={images[buttonImageIndex % images.length]}  // Button image toggles
+                        mainImage={img} 
+                        buttonImage={images[buttonImageIndex % images.length]}
                         likeId={likeId}
                         onClick={Like}
                         count={likes[likeId] || 0}
