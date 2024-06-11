@@ -9,12 +9,12 @@ import UploadPoat from '../MainPage/uploadPost';
 import Posts from '../MainPage/posts';
 import Main from '../MainPage/main';
 import Explorer from '../MainPage/explorer';
+import User from '../MainPage/user';
 
 function LoginPage(){
 
     return (
         <>
-        <body>
             <h3 className='title'>Instagram</h3>
             <div className="login-container">
                 <form className="prism">
@@ -28,7 +28,6 @@ function LoginPage(){
                     <Link to={"/signUp"}><h5>Sign up</h5></Link>
                 </form>
             </div>
-        </body>
         </>
     );
 }
@@ -46,6 +45,7 @@ function App(){
                 <Route path='/setting' element={<Setting/>}></Route>
                 <Route path='/uploadPost' element={<UploadPoat/>}></Route>
                 <Route path='/explorer' element={<Explorer/>}></Route>
+                <Route path='/user' element={<User/>}></Route>
             </Routes>
         </Router>
     )

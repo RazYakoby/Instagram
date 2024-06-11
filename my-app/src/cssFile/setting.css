@@ -49,7 +49,7 @@
 
 .open_menu {
     width: 75px;
-    height: 200px;
+    height: 250px;
     background-color: lightblue;
     overflow: visible;
     transition: width 0.5s ease, height 0.5s ease;

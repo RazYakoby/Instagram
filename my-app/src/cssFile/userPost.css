@@ -1,0 +1,18 @@
+.flexable {
+    display: flex;
+    margin-left: 0;
+}
+
+.sizeOfTheImg {
+    width: 200px;
+    height: auto;
+    cursor: pointer;
+    margin-right: 5px;
+    margin-top: 20px;
+}
+
+@media (min-width: 100vh) {
+    .flexable {
+        margin-left: 30%;
+    }
+}

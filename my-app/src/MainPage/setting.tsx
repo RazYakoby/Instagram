@@ -1,6 +1,6 @@
 import { useState } from "react";
 import "../cssFile/setting.css";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 function Setting(){
 
@@ -35,12 +35,17 @@ function Setting(){
         navigate('/explorer');
     }
 
+    const User = () => {
+        navigate('/user');
+    }
+
 
     return(
         <div className="menu">
             <button className={isClick ? "button_style_unClick" : "button_style_click"} onClick={handleOpen} style={{ borderRadius: '10px'}} >menu</button>
             <div className={isClick ? "close_menu" : "open_menu"}>
                 <div>
+                    <h3><button id="button" onClick={User}>User</button></h3>
                     <h3><button id="button" onClick={Home}>Home</button></h3>
                     <h3><button id="button" onClick={UploadPost}>upload Post</button></h3>
                     <h3><button id="button" onClick={explorer}>explorer</button></h3>
