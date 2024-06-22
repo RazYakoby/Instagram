@@ -1,12 +1,12 @@
 import { useNavigate } from 'react-router-dom';
-import '../cssFile/loginPage.css';
 import { axiosInstance } from "../api/axios";
+import '../cssFile/loginPage.css';
 
 const baseRoute = 'http://localhost:3100';
 const loginRoute = '/login';
 async function canLogin(username: string, password: string): Promise<boolean> {
     const res = await axiosInstance.post(`${baseRoute}${loginRoute}/loginpage`, { username, password}, {
-        validateStatus: (status: any) => true
+        validateStatus: (status) => true
     });
 
     if (res.status !== 200) {
