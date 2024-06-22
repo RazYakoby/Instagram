@@ -6,7 +6,7 @@ const baseRoute = 'http://localhost:3100';
 const loginRoute = '/login';
 async function canLogin(username: string, password: string): Promise<boolean> {
     const res = await axiosInstance.post(`${baseRoute}${loginRoute}/loginpage`, { username, password}, {
-        validateStatus: (status) => true
+        validateStatus: (status: any) => true
     });
 
     if (res.status !== 200) {
