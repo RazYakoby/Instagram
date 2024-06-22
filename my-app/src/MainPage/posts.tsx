@@ -78,11 +78,6 @@ const Posts: React.FC = () => {
 
     return (
         <>
-            <nav className='story'>
-                <button className='storyButton'></button>
-                <button className='storyButton'></button>
-                <button className='storyButton'></button>
-            </nav>
             {images.map((img, index) => {
                 const likeId = `like${index}`;
                 const buttonImageIndex = buttonImages[likeId] || 0;

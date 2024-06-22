@@ -1,17 +1,34 @@
-import { createRoot } from 'react-dom/client';
-import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
-import MainPage from '../MainPage/main';
-import SignUp from './signUp';
-import ForgotPassword from './forgotPassword';
+import { useNavigate } from 'react-router-dom';
 import '../cssFile/loginPage.css';
-import Setting from '../MainPage/setting';
-import UploadPoat from '../MainPage/uploadPost';
-import Posts from '../MainPage/posts';
-import Main from '../MainPage/main';
-import Explorer from '../MainPage/explorer';
-import User from '../MainPage/user';
+import { axiosInstance } from "../api/axios";
 
-function LoginPage(){
+const baseRoute = 'http://localhost:3100';
+const loginRoute = '/login';
+async function canLogin(username: string, password: string): Promise<boolean> {
+    const res = await axiosInstance.post(`${baseRoute}${loginRoute}/loginpage`, { username, password}, {
+        validateStatus: (status) => true
+    });
+
+    if (res.status !== 200) {
+        alert("Error: " + res.data);
+        return false;
+    } else {
+        console.log(res.data);
+        return true;
+    }
+}
+
+function LoginPage() {
+    const navigate = useNavigate();
+
+    const login = async () => {    
+        const username = (document.getElementById('username') as HTMLInputElement).value;
+        const password = (document.getElementById('password') as HTMLInputElement).value;
+
+        if (await canLogin(username, password)) {
+            navigate("/MainPage");
+        }
+    } 
 
     return (
         <>
@@ -23,34 +40,14 @@ function LoginPage(){
                     <input type="text" id="username" name="username"/>
                     <label>Password:</label>
                     <input type="password" id="password" name="password"/>
-                    <Link to={"/MainPage"}><button className='button-login' type="submit">Login</button></Link>
-                    <Link to={"/forgotPassword"}><h5>Forgot Password?</h5></Link>
-                    <Link to={"/signUp"}><h5>Sign up</h5></Link>
+                    <div className='button-login' onClick={login}>Login</div>
+                    <div><h5>Forgot Password?</h5></div>
+                    <div><h5>Sign up</h5></div>
                 </form>
             </div>
         </>
     );
 }
 
-function App(){
-    return(
-        <Router>
-            <Routes>
-                <Route path='/*' element={<LoginPage/>}></Route>
-                <Route path='/mainPage' element={<MainPage/>}></Route>
-                <Route path='/forgotPassword' element={<ForgotPassword/>}></Route>
-                <Route path='/signUp' element={<SignUp/>}></Route>
-                <Route path='main' element={<Main/>}></Route>
-                <Route path='/posts' element = {<Posts/>}></Route>
-                <Route path='/setting' element={<Setting/>}></Route>
-                <Route path='/uploadPost' element={<UploadPoat/>}></Route>
-                <Route path='/explorer' element={<Explorer/>}></Route>
-                <Route path='/user' element={<User/>}></Route>
-            </Routes>
-        </Router>
-    )
-}
 
-
-export default App;
-
+export default LoginPage;
