@@ -1,7 +1,27 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
-import '../cssFile/uploadPost.css';
+import '../../cssFile/uploadPost.css';
 import Setting from './setting';
+import { axiosInstance } from "../../api/axios";
+import {getUsername} from "../LoginPage/loginPage";
+
+const baseRoute = 'http://localhost:3100';
+const uploadPostRoute = '/posts';
+
+async function setPost(username: string, src: string): Promise<boolean> {
+    const res = await axiosInstance.post(`${baseRoute}${uploadPostRoute}/upload`, { username, src }, {
+        validateStatus: (status) => true
+    });
+
+    if (res.status !== 200) {
+        console.log(res.data);
+        return false;
+    } else {
+        console.log(res.data);
+        return true;
+    }
+}
+
 
 function Filter(data:ImageData, num:number, div:number) {
     const newImage = new Uint8ClampedArray(data.data);
@@ -55,6 +75,8 @@ function UploadPost(){
 
     const [imageData, setImageData] = useState<ImageData | null>(null);
 
+    const username = getUsername();
+
     const navigate = useNavigate();
 
     const handleImageUpload = (e:any) => {
@@ -82,8 +104,10 @@ function UploadPost(){
       
     }
 
-    const UploadPost = () => {
-        navigate('/main');
+    const UploadPost = async () => {
+        if(await setPost(username, imageSrc)){
+            navigate('/main');
+        }
     }
 
     return (
@@ -91,6 +115,7 @@ function UploadPost(){
             <div>
                 <Setting/>
             </div>
+            <h4>username: {username}</h4>
             <input className='input_file' type="file" onChange={handleImageUpload}/>
             <nav>
                 <img src={imageSrc} className="img_post" alt='img'></img>

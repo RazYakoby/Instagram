@@ -1,4 +1,4 @@
-import '../cssFile/userStatus.css';
+import '../../cssFile/userStatus.css';
 import Setting from "../MainPage/setting";
 
 function userStatus () {

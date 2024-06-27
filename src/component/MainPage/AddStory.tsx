@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import '../cssFile/addStory.css';
+import '../../cssFile/addStory.css';
 
 interface StoryProps {
     image: string;

@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import { axiosInstance } from '../api/axios';
+import { axiosInstance } from '../../api/axios';
 
 const baseRoute = 'http://localhost:3100';
 const loginRoute = '/login';

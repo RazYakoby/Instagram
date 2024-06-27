@@ -1,7 +1,7 @@
 import { useState } from "react";
-import heartIcon from '../heart-icon.jpg';
-import heartRedIcon from '../heartRed-icon.jpg';
-import '../cssFile/explorer.css';
+import heartIcon from '../../heart-icon.jpg';
+import heartRedIcon from '../../heartRed-icon.jpg';
+import '../../cssFile/explorer.css';
 import Setting from "./setting";
 
 interface PostProps {

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import '../cssFile/userPost.css';
-import heartIcon from '../heart-icon.jpg';
-import heartRedIcon from '../heartRed-icon.jpg';
+import '../../cssFile/userPost.css';
+import heartIcon from '../../heart-icon.jpg';
+import heartRedIcon from '../../heartRed-icon.jpg';
 
 interface post {
     post: string;

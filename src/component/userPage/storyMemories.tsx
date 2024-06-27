@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import '../cssFile/storyMemories.css';
+import '../../cssFile/storyMemories.css';
 
 interface StoryProps {
     image: string;

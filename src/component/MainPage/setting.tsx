@@ -1,5 +1,5 @@
 import { useState } from "react";
-import "../cssFile/setting.css";
+import "../../cssFile/setting.css";
 import { useNavigate } from "react-router-dom";
 
 function Setting(){

@@ -1,9 +1,10 @@
 import { useNavigate } from 'react-router-dom';
-import { axiosInstance } from "../api/axios";
-import '../cssFile/loginPage.css';
+import { axiosInstance } from "../../api/axios";
+import '../../cssFile/loginPage.css';
 
 const baseRoute = 'http://localhost:3100';
 const loginRoute = '/login';
+let getUser = "";
 async function canLogin(username: string, password: string): Promise<boolean> {
     const res = await axiosInstance.post(`${baseRoute}${loginRoute}/loginpage`, { username, password}, {
         validateStatus: (status) => true
@@ -26,9 +27,18 @@ function LoginPage() {
         const password = (document.getElementById('password') as HTMLInputElement).value;
 
         if (await canLogin(username, password)) {
+            setUsername(username);
             navigate("/MainPage");
         }
     } 
+
+    const forgotPassetd = () => {
+        navigate("/forgotPassword");
+    }
+
+    const signUp = () => {
+        navigate("/signUp");
+    }
 
     return (
         <>
@@ -41,13 +51,17 @@ function LoginPage() {
                     <label>Password:</label>
                     <input type="password" id="password" name="password"/>
                     <div className='button-login' onClick={login}>Login</div>
-                    <div><h5>Forgot Password?</h5></div>
-                    <div><h5>Sign up</h5></div>
+                    <div onClick={forgotPassetd}><h5>Forgot Password?</h5></div>
+                    <div onClick={signUp}><h5>Sign up</h5></div>
                 </form>
             </div>
         </>
     );
 }
 
+export const setUsername = (username: string) => {
+    getUser = username;
+};
 
+export const getUsername = () => getUser;
 export default LoginPage;
