@@ -11,7 +11,7 @@ import { json } from 'node:stream/consumers';
 const baseRoute = 'http://localhost:3100';
 const mainRoute = '/main';
 
-async function GetPost(): Promise<string[]> {
+async function GetPost(): Promise<ImageData[]> {
     try {
         const res = await axiosInstance.post(`${baseRoute}${mainRoute}/mainpage`, {}, {
             validateStatus: (status) => true
@@ -31,7 +31,13 @@ async function GetPost(): Promise<string[]> {
     }
 }
 
+interface ImageData {
+    name: string;
+    src: string;
+}
+
 interface PostProps {
+    userName: string;
     mainImage: string;
     buttonImage: string;
     likeId: string;
@@ -39,7 +45,7 @@ interface PostProps {
     count: number;
 }
 
-const Post: React.FC<PostProps> = ({ mainImage, buttonImage, likeId, onClick, count }) => {
+const Post: React.FC<PostProps> = ({ mainImage, userName, buttonImage, likeId, onClick, count }) => {
     const [open, setOpen] = useState(false);
     const [comments, setComments] = useState<string[]>([]);
 
@@ -58,7 +64,13 @@ const Post: React.FC<PostProps> = ({ mainImage, buttonImage, likeId, onClick, co
 
     return (
         <nav className="post">
-            <img src={mainImage} className="img" alt="image"></img>
+            <div className='imageDetails'>
+                <button className='userNameButton'></button>
+                <h4 className='userNameText'>{userName}</h4>
+            </div>
+            <div>
+                <img src={mainImage} className="img" alt="image"></img>
+            </div>
             <div className='features'>
                 <button id='Comment' onClick={handleOpen}>Comment</button>
                 <MessageDialog open={open} onClose={handleClose} onConfirm={handleConfirm} comments={comments} />
@@ -74,7 +86,8 @@ const Post: React.FC<PostProps> = ({ mainImage, buttonImage, likeId, onClick, co
 };
 
 const Posts: React.FC = () => {
-    const [images, setImages] = useState<string[]>([]);
+    const [images, setImages] = useState<ImageData[]>([]);
+    const likeImages = [heartIcon, heartRedIcon];
     const [likes, setLikes] = useState<{ [key: string]: number }>({});
     const [buttonImages, setButtonImages] = useState<{ [key: string]: number }>({});
 
@@ -100,7 +113,7 @@ const Posts: React.FC = () => {
         localStorage.setItem('buttonImages', JSON.stringify(newButtonImages));
 
         const newLikes = { ...likes };
-        const currentImage = images[newButtonImages[likeId] % images.length];
+        const currentImage = likeImages[newButtonImages[likeId] % likeImages.length];
 
         if (currentImage === heartRedIcon) {
             newLikes[likeId] = (newLikes[likeId] || 0) - 1;
@@ -118,11 +131,12 @@ const Posts: React.FC = () => {
              (images.map((img, index) => {
                 const likeId = `like${index}`;
                 const buttonImageIndex = buttonImages[likeId] || 0;
-                const buttonImage = buttonImageIndex % images.length === index ? heartRedIcon : heartIcon;
+                const buttonImage = buttonImageIndex % likeImages.length === index ? heartRedIcon : heartIcon;
                 return (
                     <Post
                         key={likeId}
-                        mainImage={img}
+                        userName={img.name}
+                        mainImage={img.src}
                         buttonImage={buttonImage}
                         likeId={likeId}
                         onClick={Like}

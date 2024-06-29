@@ -6,10 +6,10 @@ import { axiosInstance } from "../../api/axios";
 import {getUsername} from "../LoginPage/loginPage";
 
 const baseRoute = 'http://localhost:3100';
-const uploadPostRoute = '/posts';
+const uploadPostRoute = '/main';
 
 async function setPost(username: string, src: string): Promise<boolean> {
-    const res = await axiosInstance.post(`${baseRoute}${uploadPostRoute}/upload`, { username, src }, {
+    const res = await axiosInstance.post(`${baseRoute}${uploadPostRoute}/postupload`, { username, src }, {
         validateStatus: (status) => true
     });
 

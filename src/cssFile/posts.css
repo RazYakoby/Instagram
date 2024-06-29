@@ -44,11 +44,29 @@
 }
 
 .storyButton {
-     margin-right: 10px;
-     width: 8vh;
-     height: 8vh;
-     border-radius: 50%;
-     border: 2px black solid;
-     cursor: pointer;
+    margin-right: 10px;
+    width: 8vh;
+    height: 8vh;
+    border-radius: 50%;
+    border: 2px black solid;
+    cursor: pointer;
+}
+
+.imageDetails {
+    display: flex;
+}
+
+.userNameButton {
+    width: 5vh;
+    height: 5vh;
+    margin: 30px 10px 5px 0px;
+    border-radius: 50%;
+    border: 2px black solid;
+    cursor: pointer;
+}
+
+.userNameText {
+    margin: 35px 0px 0px 0px;
+    align-items: center;
 }
 
