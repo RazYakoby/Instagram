@@ -5,6 +5,7 @@ import heartRedIcon from '../../heartRed-icon.jpg';
 import axios from "axios";
 import { axiosInstance } from "../../api/axios";
 import { getUsername } from "../LoginPage/loginPage";
+import { useNavigate } from "react-router-dom";
 
 const baseRoute = 'http://localhost:3100'; // Replace with your server URL
 const userRoute = '/user'; // Assuming '/user' is the route where userPageServer is mounted
@@ -46,6 +47,7 @@ const MyPost: React.FC<post> = ({post, onclick}) => {
 
 const UserPost: React.FC = () => {
     const [post, setPost] = useState<string[]>([]);
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchData = async () => {
@@ -56,8 +58,7 @@ const UserPost: React.FC = () => {
     }, []);
 
     const PostImage = () => {
-        // navigate to the post page
-        // put all the posts that belong to specific id
+        navigate("/userPostPage");
     }
 
     return(

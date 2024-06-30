@@ -9,6 +9,7 @@ import Posts from '../MainPage/posts';
 import Main from '../MainPage/main';
 import Explorer from '../MainPage/explorer';
 import User from '../MainPage/user';
+import UserPostPage from '../userPage/userPostPage';
 
 function App() {
     return (
@@ -24,6 +25,7 @@ function App() {
                 <Route path='/uploadPost' element={<UploadPost />} />
                 <Route path='/explorer' element={<Explorer />} />
                 <Route path='/user' element={<User />} />
+                <Route path='/userPostPage' element={<UserPostPage/>}/>
             </Routes>
         </Router>
     );
