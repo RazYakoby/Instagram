@@ -6,14 +6,14 @@ import MessageDialog from '../MessageDialog';
 import axios from "axios";
 import { axiosInstance } from "../../api/axios";
 import { getUsername } from "../LoginPage/loginPage";
-import { getUserPostname } from "../MainPage/explorer";
+import { getSrcPost } from "../MainPage/explorer";
 
 const baseRoute = 'http://localhost:3100'; // Replace with your server URL
 const userRoute = '/user'; // Assuming '/user' is the route where userPageServer is mounted
 
-async function GetUserPost(username: string) : Promise<ImageData[]> {
+async function GetUserPost(src: string) : Promise<ImageData[]> {
     try {
-        const response = await axios.post(`${baseRoute}${userRoute}/userpostsnstatus`, { username }, {
+        const response = await axios.post(`${baseRoute}${userRoute}/userpostsnstatus`, { src }, {
             validateStatus: (status) => true // Example of custom status validation
         });
 
@@ -84,6 +84,13 @@ const Post: React.FC<PostProps> = ({ mainImage, userName, buttonImage, likeId, o
     );
 };
 
+const shuffleArray = (array: ImageData[]): ImageData[] => {
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+    }
+    return array;
+};
 
 const UserPostPage: React.FC = () => {
     const [images, setImages] = useState<ImageData[]>([]);
@@ -93,17 +100,11 @@ const UserPostPage: React.FC = () => {
 
     useEffect(() => {
         const fetchData = async () => {
-            if (getUsername() === getUserPostname()){
-                const srcList = await GetUserPost(getUsername());
-                setImages(srcList);
-            }
-            else{
-                const srcList = await GetUserPost(getUserPostname());
-                setImages(srcList);
-            }
-        };
+            const srcList = await GetUserPost(getSrcPost());
+            setImages(srcList);
+        }
         fetchData();
-    }, []);
+    },[])
 
     useEffect(() => {
         const savedLikes = JSON.parse(localStorage.getItem('likes') || '{}');
@@ -135,7 +136,6 @@ const UserPostPage: React.FC = () => {
         <>
             {images.length > 0 ?
              (images.map((img, index) => {
-                console.log(img.src); console.log(img.name);
                 const likeId = `like${index}`;
                 const buttonImageIndex = buttonImages[likeId] || 0;
                 const buttonImage = buttonImageIndex % likeImages.length === index ? heartRedIcon : heartIcon;

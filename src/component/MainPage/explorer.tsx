@@ -53,11 +53,20 @@ const Post: React.FC<PostProps> = ({mainImage, buttonImage, onClick}) => {
     );
 }
 
-let userPostName = "";
+let srcPost = "";
 
 function Explorer() {
     const [image, setImage] = useState<ImageData[]>([]);
     const navigate = useNavigate();
+
+    const rndImg = () => {
+        const shuffledArray = image.slice();
+        for (let i = shuffledArray.length - 1; i > 0; i--){
+            const j = Math.floor(Math.random() * (i + 1));
+            [shuffledArray[i], shuffledArray[j]] = [shuffledArray[j], shuffledArray[i]];
+        }
+        return shuffledArray;
+    }
 
     useEffect(() => {
         const fetchData = async () =>{
@@ -65,10 +74,10 @@ function Explorer() {
             setImage(img);
         }
         fetchData();
-    })
+    }, [])
 
-    const OpenPost = (username:string) => {
-        setUserPostname(username);
+    const OpenPost = (src:string) => {
+        setSrcPost(src);
         navigate("/userPostPage");
     };
 
@@ -79,12 +88,12 @@ function Explorer() {
             </div>
             <input className="search"/>
             <nav className="explorer-nav">
-                {image.map((img, index) => (
+                {rndImg().map((img, index) => (
                     <Post
                         key={index}
                         mainImage={img.src}
                         buttonImage=""
-                        onClick={() => OpenPost(img.name)}
+                        onClick={() => OpenPost(img.src)}
                     />
                 ))}
             </nav>
@@ -92,10 +101,10 @@ function Explorer() {
     );
 }
 
-export const setUserPostname = (username: string) => {
-    userPostName = username;
+export const setSrcPost = (src: string) => {
+    srcPost = src;
 };
 
-export const getUserPostname = () => userPostName;
+export const getSrcPost = () => srcPost;
 
 export default Explorer;
