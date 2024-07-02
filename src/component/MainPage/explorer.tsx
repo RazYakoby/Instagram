@@ -58,22 +58,33 @@ let srcPost = "";
 function Explorer() {
     const [image, setImage] = useState<ImageData[]>([]);
     const navigate = useNavigate();
+    let flag = false;
 
-    const rndImg = () => {
-        const shuffledArray = image.slice();
+    const rndImg = async () => {
+        const img = await GetPosts();
+        const shuffledArray = img.slice();
         for (let i = shuffledArray.length - 1; i > 0; i--){
             const j = Math.floor(Math.random() * (i + 1));
             [shuffledArray[i], shuffledArray[j]] = [shuffledArray[j], shuffledArray[i]];
         }
-        return shuffledArray;
+        setImage(shuffledArray);
     }
 
     useEffect(() => {
-        const fetchData = async () =>{
-            const img = await GetPosts();
-            setImage(img);
+        if (flag === false){
+            rndImg();
+            flag = true;
         }
-        fetchData();
+        const handleKeyDown = (event: KeyboardEvent) => {
+            if (event.altKey && event.key === 'ArrowRight' || <Setting/>) {
+                flag = false;
+            }
+        };
+        window.addEventListener('keydown', handleKeyDown);
+        
+        return () => {
+            window.removeEventListener('keydown', handleKeyDown);
+        };
     }, [])
 
     const OpenPost = (src:string) => {
@@ -88,7 +99,7 @@ function Explorer() {
             </div>
             <input className="search"/>
             <nav className="explorer-nav">
-                {rndImg().map((img, index) => (
+                {image.map((img, index) => (
                     <Post
                         key={index}
                         mainImage={img.src}
