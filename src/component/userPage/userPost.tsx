@@ -4,8 +4,7 @@ import heartIcon from '../../heart-icon.jpg';
 import heartRedIcon from '../../heartRed-icon.jpg';
 import axios from "axios";
 import { axiosInstance } from "../../api/axios";
-import { getUsername } from "../LoginPage/loginPage";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 const baseRoute = 'http://localhost:3100'; // Replace with your server URL
 const userRoute = '/user'; // Assuming '/user' is the route where userPageServer is mounted
@@ -45,17 +44,20 @@ const MyPost: React.FC<post> = ({post, onclick}) => {
     );
 }
 
-const UserPost: React.FC = () => {
+interface UserPostProps {
+    username: string;
+  }
+
+const UserPost: React.FC<UserPostProps> = ({username}) => {
     const [post, setPost] = useState<string[]>([]);
     const navigate = useNavigate();
-
     useEffect(() => {
         const fetchData = async () => {
-            const srcList = await GetPost(getUsername());
+            const srcList = await GetPost(username);
             setPost(srcList);
         };
         fetchData();
-    }, []);
+    }, [username]);
 
     const PostImage = () => {
         navigate("/userPostPage");

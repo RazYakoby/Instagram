@@ -24,7 +24,7 @@ function App() {
                 <Route path='/setting' element={<Setting />} />
                 <Route path='/uploadPost' element={<UploadPost />} />
                 <Route path='/explorer' element={<Explorer />} />
-                <Route path='/user' element={<User />} />
+                <Route path="/user/:username" element={<User />} /> 
                 <Route path='/userPostPage' element={<UserPostPage/>}/>
             </Routes>
         </Router>

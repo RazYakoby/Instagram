@@ -1,6 +1,7 @@
 import { useState } from "react";
 import "../../cssFile/setting.css";
 import { useNavigate } from "react-router-dom";
+import {getUsername} from "../LoginPage/loginPage";
 
 function Setting(){
 
@@ -36,7 +37,7 @@ function Setting(){
     }
 
     const User = () => {
-        navigate('/user');
+        navigate(`/user/${getUsername()}`);
     }
 
 

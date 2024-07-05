@@ -5,7 +5,6 @@ import '../../cssFile/posts.css';
 import MessageDialog from '../MessageDialog';
 import axios from "axios";
 import { axiosInstance } from "../../api/axios";
-import { getUsername } from "../LoginPage/loginPage";
 import { getSrcPost } from "../MainPage/explorer";
 
 const baseRoute = 'http://localhost:3100'; // Replace with your server URL
@@ -82,14 +81,6 @@ const Post: React.FC<PostProps> = ({ mainImage, userName, buttonImage, likeId, o
             </div>
         </nav>
     );
-};
-
-const shuffleArray = (array: ImageData[]): ImageData[] => {
-    for (let i = array.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [array[i], array[j]] = [array[j], array[i]];
-    }
-    return array;
 };
 
 const UserPostPage: React.FC = () => {
