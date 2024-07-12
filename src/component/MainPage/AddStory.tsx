@@ -117,6 +117,8 @@ interface StoryViewerProps {
     addStory: (newStory: StoryProps, index: number) => void;
 }
 
+let getuser = "";
+
 const StoryViewer: React.FC<StoryViewerProps> = ({ stories, initialIndex, onClose, addStory }) => {
     const [currentStoryIndex, setCurrentStoryIndex] = useState(initialIndex);
     const navigate = useNavigate();
@@ -145,6 +147,7 @@ const StoryViewer: React.FC<StoryViewerProps> = ({ stories, initialIndex, onClos
     };
 
     const goToUserPage = (username:string) => {
+        setUsername(username);
         navigate(`/user/${username}`);
     }
 
@@ -305,5 +308,11 @@ const AddStory: React.FC = () => {
         </>
     );
 };
+
+export const setUsername = (username: string) => {
+    getuser = username;
+};
+
+export const getUser = () => getuser;
 
 export default AddStory;

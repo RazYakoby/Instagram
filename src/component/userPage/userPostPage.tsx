@@ -1,33 +1,15 @@
-import { useEffect, useState } from "react";
-import heartIcon from '../../heart-icon.jpg';
-import heartRedIcon from '../../heartRed-icon.jpg';
+import React, { useState, useEffect } from "react";
 import '../../cssFile/posts.css';
 import MessageDialog from '../MessageDialog';
 import axios from "axios";
 import { axiosInstance } from "../../api/axios";
 import { getSrcPost } from "../MainPage/explorer";
 
-const baseRoute = 'http://localhost:3100'; // Replace with your server URL
-const userRoute = '/user'; // Assuming '/user' is the route where userPageServer is mounted
+import heartIcon from '../../heart-icon.jpg';
+import heartRedIcon from '../../heartRed-icon.jpg';
 
-async function GetUserPost(src: string) : Promise<ImageData[]> {
-    try {
-        const response = await axios.post(`${baseRoute}${userRoute}/userpostsnstatus`, { src }, {
-            validateStatus: (status) => true // Example of custom status validation
-        });
-
-        if (response.status === 200) {
-            console.log('User posts:', response.data); // Logging fetched user posts
-            return response.data; // Returning fetched data
-        } else {
-            console.error('Failed to fetch user posts:', response.statusText);
-            throw new Error('Failed to fetch user posts'); // Throw an error if status is not 200
-        }
-    } catch (error) {
-        console.error('Error fetching user posts:', error);
-        throw error; // Propagate the error for further handling
-    }
-}
+const baseRoute = 'http://localhost:3100';
+const userRoute = '/user';
 
 interface ImageData {
     name: string;
@@ -67,7 +49,7 @@ const Post: React.FC<PostProps> = ({ mainImage, userName, buttonImage, likeId, o
                 <h4 className='userNameText'>{userName}</h4>
             </div>
             <div>
-                <img src={mainImage} className="img" alt="image"></img>
+                <img src={mainImage} className="img" alt="image" />
             </div>
             <div className='features'>
                 <button id='Comment' onClick={handleOpen}>Comment</button>
@@ -91,11 +73,26 @@ const UserPostPage: React.FC = () => {
 
     useEffect(() => {
         const fetchData = async () => {
-            const srcList = await GetUserPost(getSrcPost());
-            setImages(srcList);
-        }
+            try {
+                const src = getSrcPost(); // Make sure getSrcPost() returns the correct value
+                const response = await axios.post(`${baseRoute}${userRoute}/userpostsnstatus`, { src }, {
+                    validateStatus: (status) => true
+                });
+
+                if (response.status === 200) {
+                    console.log('User posts:', response.data); // Logging fetched user posts
+                    const srcList: ImageData[] = response.data.map((item: any) => ({ name: item.name, src: item.src }));
+                    setImages(srcList);
+                } else {
+                    console.error('Failed to fetch user posts:', response.statusText);
+                }
+            } catch (error) {
+                console.error('Error fetching user posts:', error);
+            }
+        };
+
         fetchData();
-    },[])
+    }, []);
 
     useEffect(() => {
         const savedLikes = JSON.parse(localStorage.getItem('likes') || '{}');
@@ -124,27 +121,27 @@ const UserPostPage: React.FC = () => {
     };
 
     return (
-        <>
+        <div>
             {images.length > 0 ?
-             (images.map((img, index) => {
-                const likeId = `like${index}`;
-                const buttonImageIndex = buttonImages[likeId] || 0;
-                const buttonImage = buttonImageIndex % likeImages.length === index ? heartRedIcon : heartIcon;
-                return (
-                    <Post
-                        key={likeId}
-                        userName={img.name}
-                        mainImage={img.src}
-                        buttonImage={buttonImage}
-                        likeId={likeId}
-                        onClick={Like}
-                        count={likes[likeId] || 0}
-                    />
-                );
-            })) : (
-                <p>Loading image...</p>
-            )}
-        </>
+                (images.map((img, index) => {
+                    const likeId = `like${index}`;
+                    const buttonImageIndex = buttonImages[likeId] || 0;
+                    const buttonImage = buttonImageIndex % likeImages.length === index ? heartRedIcon : heartIcon;
+                    return (
+                        <Post
+                            key={likeId}
+                            userName={img.name}
+                            mainImage={img.src}
+                            buttonImage={buttonImage}
+                            likeId={likeId}
+                            onClick={Like}
+                            count={likes[likeId] || 0}
+                        />
+                    );
+                })) : (
+                    <p>Loading images...</p>
+                )}
+        </div>
     );
 };
 

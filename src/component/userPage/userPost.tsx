@@ -3,81 +3,76 @@ import '../../cssFile/userPost.css';
 import heartIcon from '../../heart-icon.jpg';
 import heartRedIcon from '../../heartRed-icon.jpg';
 import axios from "axios";
-import { axiosInstance } from "../../api/axios";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
-const baseRoute = 'http://localhost:3100'; // Replace with your server URL
-const userRoute = '/user'; // Assuming '/user' is the route where userPageServer is mounted
+const baseRoute = 'http://localhost:3100';
+const userRoute = '/user'; 
 
-// Example usage in your client-side code
-async function GetPost(username: string) {
+async function GetPost(username: string) : Promise<string[]> {
     try {
+        alert(username);
         const response = await axios.post(`${baseRoute}${userRoute}/userposts`, { username }, {
-            validateStatus: (status) => true // Example of custom status validation
+            validateStatus: (status) => true
         });
 
         if (response.status === 200) {
-            console.log('User posts:', response.data); // Logging fetched user posts
-            return response.data; // Returning fetched data
+            console.log('User posts:', response.data); 
+            return response.data; 
         } else {
             console.error('Failed to fetch user posts:', response.statusText);
-            throw new Error('Failed to fetch user posts'); // Throw an error if status is not 200
+            return [];
         }
     } catch (error) {
         console.error('Error fetching user posts:', error);
-        throw error; // Propagate the error for further handling
+        return [];
     }
 }
 
-
-interface post {
+interface MyPostProps {
     post: string;
-    onclick: () => void;
+    onClick: () => void;
 }
 
-const MyPost: React.FC<post> = ({post, onclick}) => {
-
-    return(
-        <>
-            <img src={post} className="sizeOfTheImg" onClick={onclick}></img>
-        </>
-    );
-}
+const MyPost: React.FC<MyPostProps> = ({ post, onClick }) => (
+    <img src={post} className="sizeOfTheImg" onClick={onClick} />
+);
 
 interface UserPostProps {
     username: string;
-  }
+}
 
-const UserPost: React.FC<UserPostProps> = ({username}) => {
-    const [post, setPost] = useState<string[]>([]);
+const UserPost: React.FC<UserPostProps> = ({ username }) => {
+    const [posts, setPosts] = useState<string[]>([]);
     const navigate = useNavigate();
+
     useEffect(() => {
         const fetchData = async () => {
-            const srcList = await GetPost(username);
-            setPost(srcList);
+            try {
+                const srcList = await GetPost(username);
+                setPosts(srcList);
+                console.log(posts);
+            } catch (error) {
+                console.error('Error fetching posts:', error);
+            }
         };
+        
         fetchData();
     }, [username]);
 
-    const PostImage = () => {
+    const handlePostClick = () => {
         navigate("/userPostPage");
     }
 
-    return(
-        <>
-            <nav className="flexable">
-                { post.length > 0 ? (
-                post.map((img:any, index:number) => (
-                    <MyPost
-                        key={index}
-                        post={img}
-                        onclick={PostImage}
-                    />
-                ))) :
-                <p>No posting yet</p>
-                }
-            </nav>
-        </>
+    return (
+        <nav className="flexable">
+            {posts.length > 0 ? (
+                posts.map((post, index) => (
+                    <MyPost key={index} post={post} onClick={handlePostClick} />
+                ))
+            ) : (
+                <p>No posts yet</p>
+            )}
+        </nav>
     );
 }
 

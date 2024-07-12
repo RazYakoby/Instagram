@@ -2,6 +2,7 @@ import { useState } from "react";
 import "../../cssFile/setting.css";
 import { useNavigate } from "react-router-dom";
 import {getUsername} from "../LoginPage/loginPage";
+import { setUsername } from "../MainPage/AddStory";
 
 function Setting(){
 
@@ -37,6 +38,7 @@ function Setting(){
     }
 
     const User = () => {
+        setUsername(getUsername());
         navigate(`/user/${getUsername()}`);
     }
 
