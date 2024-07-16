@@ -10,7 +10,7 @@ const User: React.FC = () => {
     return (
         <div>
             <div><UserStatus /></div>
-            <div><StoryMemories /></div>
+            {username && <div><StoryMemories username={username} /></div>}
             {username && <div><UserPost username={username} /></div>}
         </div>
     );

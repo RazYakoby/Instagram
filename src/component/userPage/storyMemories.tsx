@@ -2,7 +2,6 @@ import React, { useEffect, useState, useRef } from 'react';
 import '../../cssFile/storyMemories.css';
 import { axiosInstance } from '../../api/axios';
 import { getUsername } from '../LoginPage/loginPage';
-import { getUser } from '../MainPage/AddStory';
 import { useNavigate } from 'react-router-dom';
 
 const baseRoute = 'http://localhost:3100';
@@ -77,36 +76,27 @@ async function MyStoryMemoryExists(username: string): Promise<boolean> {
 }
 let flag = false;
 
-function isEmptyString(str: string): boolean {
-    flag = true;
-    return str === "";
+interface UserStoryProps {
+    username: string;
 }
 
-const StoryMemories: React.FC = () => {
+const StoryMemories: React.FC<UserStoryProps> = ({ username }) => {
     const [stories, setStories] = useState<{ [username: string]: { [storyTitle: string]: StoryProps[] } }>({});
     const [isViewerOpen, setIsViewerOpen] = useState(false);
     const [currentStoryUsername, setCurrentStoryUsername] = useState<string | null>(null);
     const [currentStoryTitle, setCurrentStoryTitle] = useState<string | null>(null);
     const [subStoryIndex, setSubStoryIndex] = useState<{ [username: string]: { [storyTitle: string]: number } }>({});
     const navigate = useNavigate();
-    const username = getUsername();
-    const otherUsername = getUser();
 
     useEffect(() => {
         const fetchStories = async () => {
             try {
                 let myStoriesArray: StoryProps[][] = [];
-                if (isEmptyString(otherUsername)) {
+
                     const userExists = await MyStoryMemoryExists(username);
                     if (userExists===true) {
                         myStoriesArray = await GetMyStories(username);
                     }
-                } else {
-                    const userExists = await MyStoryMemoryExists(otherUsername);
-                    if (userExists===true) {
-                        myStoriesArray = await GetMyStories(otherUsername);
-                    }
-                }
     
                 console.log('myStoriesArray:', myStoriesArray);
 
@@ -291,7 +281,7 @@ const StoryMemories: React.FC = () => {
     return (
         <>
             <nav className="inLine1">
-            {getUsername() === getUser() && 
+            {getUsername() === username && 
                 <label className="add-button">
                     <h4>Add</h4>
                     <input
