@@ -41,6 +41,8 @@ interface UserPostProps {
     username: string;
 }
 
+let amountOfPost = 0;
+
 const UserPost: React.FC<UserPostProps> = ({ username }) => {
     const [posts, setPosts] = useState<string[]>([]);
     const navigate = useNavigate();
@@ -49,6 +51,7 @@ const UserPost: React.FC<UserPostProps> = ({ username }) => {
         const fetchData = async () => {
             try {
                 const srcList = await GetPost(username);
+                amountOfPost = srcList.length;
                 setPosts(srcList);
                 console.log(posts);
             } catch (error) {
@@ -75,5 +78,7 @@ const UserPost: React.FC<UserPostProps> = ({ username }) => {
         </nav>
     );
 }
+
+export const getAmountOfPost = () => amountOfPost;
 
 export default UserPost;

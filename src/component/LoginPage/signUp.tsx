@@ -3,6 +3,7 @@ import { axiosInstance } from "../../api/axios";
 
 const baseRoute = 'http://localhost:3100';
 const loginRoute = '/login';
+const userRoute = '/user';
 async function signUpRequest(username:string, password:string) {
     const res = await axiosInstance.post(`${baseRoute}${loginRoute}/signup`, { username, password}, {
         validateStatus: (status) => true
@@ -16,6 +17,20 @@ async function signUpRequest(username:string, password:string) {
     }
 }
 
+async function setStatus(username: string): Promise<boolean> {
+    const res = await axiosInstance.post(`${baseRoute}${userRoute}/setstutus`, { username }, {
+        validateStatus: (status) => true
+    });
+
+    if (res.status !== 200) {
+        alert("Error: " + res.data);
+        return false;
+    } else {
+        console.log(res.data);
+        return true;
+    }
+}
+
 function SignUp () {
     const navigate = useNavigate();
 
@@ -24,7 +39,9 @@ function SignUp () {
         const password = (document.getElementById('password') as HTMLInputElement).value;
 
         if(await signUpRequest(username, password)){
-            navigate('/loginPage');
+            if(await setStatus(username)){
+                navigate('/loginPage');
+            }
         }
     }
 

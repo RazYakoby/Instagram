@@ -42,7 +42,6 @@ function Setting(){
         navigate(`/user/${getUsername()}`);
     }
 
-
     return(
         <div className="menu">
             <button className={isClick ? "button_style_unClick" : "button_style_click"} onClick={handleOpen} style={{ borderRadius: '10px'}} >menu</button>

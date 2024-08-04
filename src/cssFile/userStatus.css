@@ -93,3 +93,11 @@
 .itemStatus h4:hover {
     color: white;
 }
+
+.follow {
+    background-color: grey;
+}
+
+.following {
+    background-color: blue;
+}
