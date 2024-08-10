@@ -52,7 +52,7 @@ async function updateFollowers(username: string, followers: number): Promise<boo
     }
   }
 
-  async function updateFollowing(username: string, following: number): Promise<boolean> {
+async function updateFollowing(username: string, following: number): Promise<boolean> {
     const res = await axios.post(`${baseRoute}${userRoute}/UpdateFollowing`, { username, following }, {
       validateStatus: (status) => true
     });
@@ -64,9 +64,37 @@ async function updateFollowers(username: string, followers: number): Promise<boo
       console.log(res.data);
       return true;
     }
+}
+
+async function updatepullFollowers(username: string, followers: number): Promise<boolean> {
+    const res = await axios.post(`${baseRoute}${userRoute}/updatepullfollowers`, { username, followers }, {
+      validateStatus: (status) => true
+    });
+  
+    if (res.status !== 200) {
+      alert("Error: " + res.data);
+      return false;
+    } else {
+      console.log(res.data);
+      return true;
+    }
   }
 
-  async function updateFollowersUser(username: string, user: string): Promise<boolean> {
+async function updatepullFollowing(username: string, following: number): Promise<boolean> {
+    const res = await axios.post(`${baseRoute}${userRoute}/UpdatepullFollowing`, { username, following }, {
+      validateStatus: (status) => true
+    });
+  
+    if (res.status !== 200) {
+      alert("Error: " + res.data);
+      return false;
+    } else {
+      console.log(res.data);
+      return true;
+    }
+}
+
+async function updateFollowersUser(username: string, user: string): Promise<boolean> {
     const res = await axios.post(`${baseRoute}${userRoute}/updatefollowersuser`, { username, user }, {
       validateStatus: (status) => true
     });
@@ -78,9 +106,9 @@ async function updateFollowers(username: string, followers: number): Promise<boo
       console.log(res.data);
       return true;
     }
-  }
+}
 
-  async function updateFollowingUser(username: string, user: string): Promise<boolean> {
+async function updateFollowingUser(username: string, user: string): Promise<boolean> {
     const res = await axios.post(`${baseRoute}${userRoute}/updatefollowingsuser`, { username, user }, {
       validateStatus: (status) => true
     });
@@ -92,9 +120,9 @@ async function updateFollowers(username: string, followers: number): Promise<boo
       console.log(res.data);
       return true;
     }
-  }
+}
 
-  async function pushToFollowersUser(username: string, user: string): Promise<boolean> {
+async function pushToFollowersUser(username: string, user: string): Promise<boolean> {
     const res = await axios.post(`${baseRoute}${userRoute}/pushtofollowersuser`, { username, user }, {
       validateStatus: (status) => true
     });
@@ -106,9 +134,9 @@ async function updateFollowers(username: string, followers: number): Promise<boo
       console.log(res.data);
       return true;
     }
-  }
+}
 
-  async function pushToFollowingUser(username: string, user: string): Promise<boolean> {
+async function pushToFollowingUser(username: string, user: string): Promise<boolean> {
     const res = await axios.post(`${baseRoute}${userRoute}/pushtofollowinguser`, { username, user }, {
       validateStatus: (status) => true
     });
@@ -120,9 +148,37 @@ async function updateFollowers(username: string, followers: number): Promise<boo
       console.log(res.data);
       return true;
     }
-  }
+}
 
-  async function getuserFollowers(username: string): Promise<StatusResponse> {
+async function pullToFollowersUser(username: string, user: string): Promise<boolean> {
+    const res = await axios.post(`${baseRoute}${userRoute}/pulltofollowersuser`, { username, user }, {
+      validateStatus: (status) => true
+    });
+  
+    if (res.status !== 200) {
+      alert("Error: " + res.data);
+      return false;
+    } else {
+      console.log(res.data);
+      return true;
+    }
+}
+
+async function pullToFollowingUser(username: string, user: string): Promise<boolean> {
+    const res = await axios.post(`${baseRoute}${userRoute}/pulltofollowinguser`, { username, user }, {
+      validateStatus: (status) => true
+    });
+  
+    if (res.status !== 200) {
+      alert("Error: " + res.data);
+      return false;
+    } else {
+      console.log(res.data);
+      return true;
+    }
+}
+
+async function getuserFollowers(username: string): Promise<StatusResponse> {
     try {
         const response = await axios.post(`${baseRoute}${userRoute}/getfollowers`, { username }, {
             validateStatus: (status) => true
@@ -145,9 +201,9 @@ async function updateFollowers(username: string, followers: number): Promise<boo
             status: 0
         };
     }
-  }
+}
 
-  async function getuserFollowing(username: string): Promise<StatusResponse> {
+async function getuserFollowing(username: string): Promise<StatusResponse> {
     try {
         const response = await axios.post(`${baseRoute}${userRoute}/getfollowing`, { username }, {
             validateStatus: (status) => true
@@ -170,57 +226,90 @@ async function updateFollowers(username: string, followers: number): Promise<boo
             status: 0
         };
     }
-  }
+}
+
+const isFollowing = async (user: string): Promise<boolean> => {
+    const followingList = (await getuserFollowing(getUsername())).status;
+    for (let i = 0; i < followingList.user.length; i++) {
+        if (followingList.user[i].toString() === user) {
+            return true;
+        }
+    }
+    return false;
+}
 
 const UserStatus: React.FC = () => {
     const [followers, setFollowers] = useState(0);
     const [following, setFollowing] = useState(0);
     const [mainuserFollowers, setMainuserFollowers] = useState(0);
-    const [mainuserFollowing, setMainuserfollowing] = useState(0);
-    const [flag, setFlag] = useState<boolean>(false);
+    const [mainuserFollowing, setMainuserFollowing] = useState(0);
+    const [isUserFollowing, setIsUserFollowing] = useState<boolean>(false);
 
     useEffect(() => {
         const fetchData = async () => {
-            setFollowers((await getuserFollowers(getUser())).status.followers);
-            setFollowing((await getuserFollowing(getUser())).status.following);
-            setMainuserFollowers((await getuserFollowers(getUsername())).status.followers);
-            setMainuserfollowing((await getuserFollowing(getUsername())).status.following);
-            console.log("sada", followers, following, mainuserFollowers, mainuserFollowing);
-        }
+            try {
+                const userFollowersResponse = await getuserFollowers(getUser());
+                const userFollowingResponse = await getuserFollowing(getUser());
+                const mainUserFollowersResponse = await getuserFollowers(getUsername());
+                const mainUserFollowingResponse = await getuserFollowing(getUsername());
+                setFollowers(userFollowersResponse.status.user.length.toString());
+                setFollowing(userFollowingResponse.status.user.length.toString());
+                setMainuserFollowers(mainUserFollowersResponse.status.user.length.toString());
+                setMainuserFollowing(mainUserFollowingResponse.status.user.length.toString());
+                const followingStatus = await isFollowing(getUser());
+                setIsUserFollowing(followingStatus);
+    
+                console.log("Fetched data:", followers, following, mainuserFollowers, mainuserFollowing);
+            } catch (error) {
+                console.error("Error fetching data:", error);
+            }
+        };
         fetchData();
-    }, [followers, following])
+    }, [followers, following, mainuserFollowers, mainuserFollowing]);
+    
 
     const onFollow = async () => {
-        setFlag(prevFlag => !prevFlag);
-        if(await updateFollowers(getUser(), followers)){
-            if (((await getuserFollowers(getUser())).status.user.length > 0)){  
-                if (await pushToFollowersUser(getUser(), getUsername())){
-                    console.log("true");
+        if (isUserFollowing){
+            if (await updatepullFollowers(getUser(), followers)) {
+                    if (await pullToFollowersUser(getUser(), getUsername())) {
+                        console.log("true");
+                    }
+            }
+            if (await updatepullFollowing(getUsername(), mainuserFollowing)) {
+                    if (await pullToFollowingUser(getUsername(), getUser())) {
+                        console.log("true");
+                    }
+            }
+        }
+        else {
+            if (await updateFollowers(getUser(), followers)) {
+                if ((await getuserFollowers(getUser())).status.user.length > 0) {
+                    if (await pushToFollowersUser(getUser(), getUsername())) {
+                        console.log("true");
+                    }
+                } else {
+                    if (await updateFollowersUser(getUser(), getUsername())) {
+                        console.log("false");
+                    }
                 }
+            } else {
+                console.log("false");
             }
-            else {
-                if(await updateFollowersUser(getUser(), getUsername()))
-                    console.log("false");
-            }
-        }
-        else{
-            console.log("false");
-        }
-        if(await updateFollowing(getUsername(), mainuserFollowing)){
-            if ((await getuserFollowing(getUsername())).status.user.length > 0){
-                if(await pushToFollowingUser(getUsername(), getUser())){
-                    console.log("true");
+            if (await updateFollowing(getUsername(), mainuserFollowing)) {
+                if ((await getuserFollowing(getUsername())).status.user.length > 0) {
+                    if (await pushToFollowingUser(getUsername(), getUser())) {
+                        console.log("true");
+                    }
+                } else {
+                    if (await updateFollowingUser(getUsername(), getUser())) {
+                        console.log("false");
+                    }
                 }
-            }
-            else{
-                if(await updateFollowingUser(getUsername(), getUser())){
-                    console.log("false");
-                }
+            } else {
+                console.log("false");
             }
         }
-        else{
-            console.log("false");
-        }
+        setIsUserFollowing(prevFlag => !prevFlag);
     };
 
     return (
@@ -232,7 +321,7 @@ const UserStatus: React.FC = () => {
                 <div className='userStatus'>
                     <div>
                         <button className="buttonUser"></button>
-                        <h4 className='userName'>{getUsername()}</h4>
+                        <h4 className='userName'>{getUser()}</h4>
                     </div>
                     <div>
                         <h4>posts</h4>
@@ -249,14 +338,14 @@ const UserStatus: React.FC = () => {
                 </div>
             </div>
             <div className='itemStatus'>
-                {getUsername() !== getUser() &&
+                {getUsername() !== getUser() && (
                     <>
-                        <button id='followButton' className={flag ? "following" : "follow"} onClick={onFollow}>
-                            <h4>{flag ? "following" : "follow"}</h4>
+                        <button id='followButton' className={isUserFollowing ? "following" : "follow"} onClick={onFollow}>
+                            <h4>{isUserFollowing ? "following" : "follow"}</h4>
                         </button>
                         <br />
                     </>
-                }
+                )}
                 <button><h4>edit profile</h4></button>
                 <button><h4>share profile</h4></button>
                 <button></button>
